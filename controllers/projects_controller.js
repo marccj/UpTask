@@ -1,4 +1,5 @@
 const Projects = require('../models/Projects');
+const Tasks = require('../models/Tasks');
 
 exports.projectsIndex = async (req, res) => {
     const projects = await Projects.findAll();
@@ -52,13 +53,24 @@ exports.projectsShow = async (req, res) => {
     });
     const [projects, project] = await Promise.all([projectsPromise, projectPromise]);
 
+    // get tasks from current project
+    const tasks = await Tasks.findAll({
+        where:{
+            projectId: project.id
+        },
+        // include: [
+        //     {model: Projects }
+        // ]
+    });
+    
     if(!project) return next();
     
     res.render('projects/show', {
         pageTitle: `Tareas del Proyecto: ${project.name}`,
         projects,
-        project
-    })
+        project,
+        tasks
+    });
 };
 
 exports.projectsEditForm = async (req, res) => {

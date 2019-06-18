@@ -17,3 +17,21 @@ exports.tasksNewSubmit = async (req, res, next) => {
 
     res.redirect(`/proyectos/${req.params.url}`);
 };
+
+exports.tasksChangeStatus = async (req, res, next) => {
+    const {id} = req.params;
+    const task = await Tasks.findOne({where: { id } });
+    
+    //change status
+    let status = 0;
+    if (task.status === status){
+        status = 1;
+    }
+    task.status = status;
+
+    const result = await task.save();
+
+    if(!result) return next();
+
+    res.status(200).send("Updated Successfully");
+};

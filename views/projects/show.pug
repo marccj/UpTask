@@ -4,15 +4,27 @@ block content
     .contenido-principal
         h1 #{pageTitle}
 
-        form.agregar-tarea(action=`/projects/${project.url}` method="POST")
+        form.agregar-tarea(action=`/proyectos/${project.url}` method="POST")
             .campo
                 label(for="task") Tarea:
                 input.nombre-tarea(type="text", name="task", placeholder="Nombre tarea")
             .campo.enviar
                 input.boton.nueva-tarea(type="submit" value="Agregar")
 
-        // TODO Listado de pendientes
-        
+        .listado-pendientes
+            ul
+              if tasks.length
+                each task in tasks
+                    li.tarea(data-task=task.id)
+                        p=task.task
+                        .acciones
+                            if task.status
+                                i.far.fa-check-circle.completo
+                            else
+                                i.far.fa-check-circle
+                            i.fas.fa-trash
+              else
+                p No hay tareas en este proyecto
         // Acciones que se pueden realizar
         .contenedor-acciones
             a(href=`/proyecto/editar/${project.id}` class="boton") Editar Proyecto

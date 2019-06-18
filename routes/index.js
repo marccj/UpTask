@@ -30,9 +30,11 @@ module.exports = function() {
         projectsController.projectsEditSubmit
     );
     // delete project
-    router.delete("/projects/:url", projectsController.projectsDelete);
+    router.delete("/proyectos/:url", projectsController.projectsDelete);
 
     // add task
-    router.post("/projects/:url", tasksController.tasksNewSubmit)
+    router.post("/proyectos/:url", tasksController.tasksNewSubmit);
+    // update task
+    router.patch("/tareas/:id", tasksController.tasksChangeStatus);
     return router;
 };

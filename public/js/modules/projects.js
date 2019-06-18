@@ -17,7 +17,7 @@ if(deleteBtn){
             cancelButtonText: 'No, cancelar'
         }).then((result) => {
             if (result.value) {     
-                const url = `${location.origin}/projects/${projectUrl}`;
+                const url = `${location.origin}/proyectos/${projectUrl}`;
                 axios.delete(url, {params: {projectUrl}})
                     .then((res) => {
                         console.log(res);
