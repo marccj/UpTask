@@ -28,7 +28,7 @@ if(deleteBtn){
                         );
                         setTimeout(() => {
                             window.location.href = "/";
-                        }, 3000);
+                        }, 1500);
                     })
                     .catch(() => {
                         Swal.fire({

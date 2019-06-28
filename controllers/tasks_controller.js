@@ -35,3 +35,16 @@ exports.tasksChangeStatus = async (req, res, next) => {
 
     res.status(200).send("Updated Successfully");
 };
+
+exports.tasksDelete = async (req, res, next) => {
+    const {idTask} = req.query;
+    const result = await Tasks.destroy({
+        where:{
+            id: idTask
+        }
+    });
+    
+    if(!result) return next();
+
+    res.status(200).send("Tarea borrada satisfactoriamente");
+};

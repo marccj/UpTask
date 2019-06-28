@@ -2,7 +2,8 @@ const Projects = require('../models/Projects');
 const Tasks = require('../models/Tasks');
 
 exports.projectsIndex = async (req, res) => {
-    const projects = await Projects.findAll();
+    const userId = res.locals.user.id;
+    const projects = await Projects.findAll({where: userId});
     res.render('projects/index', {
         pageTitle: "Proyectos "+res.locals.year,
         projects
@@ -10,7 +11,8 @@ exports.projectsIndex = async (req, res) => {
 };
 
 exports.projectsNewForm = async (req, res) => {
-    const projects = await Projects.findAll();
+    const userId = res.locals.user.id;
+    const projects = await Projects.findAll({ where: userId });
 
     res.render("projects/new_edit", {
         pageTitle: "Nuevo Proyecto",
@@ -19,7 +21,8 @@ exports.projectsNewForm = async (req, res) => {
 };
 
 exports.projectsNewSubmit = async (req, res) => {
-    const projects = await Projects.findAll();
+    const userId = res.locals.user.id;
+    const projects = await Projects.findAll({ where: userId });
 
     // validacion de informacion
     const { name } = req.body;
@@ -38,17 +41,19 @@ exports.projectsNewSubmit = async (req, res) => {
         });
     } else{
         // insertar en DB
-        await Projects.create({ name });
+        const userId = res.locals.user.id;
+        await Projects.create({ name, userId });
         res.redirect('/');
     }
 };
 
 exports.projectsShow = async (req, res) => {
-
-    const projectsPromise = Projects.findAll();
+    const userId = res.locals.user.id;
+    const projectsPromise = Projects.findAll({where: userId});
     const projectPromise = Projects.findOne({
         where: {
-            url: req.params.url
+            url: req.params.url,
+            userId
         }
     });
     const [projects, project] = await Promise.all([projectsPromise, projectPromise]);
@@ -74,11 +79,12 @@ exports.projectsShow = async (req, res) => {
 };
 
 exports.projectsEditForm = async (req, res) => {
-
-    const projectsPromise= Projects.findAll();
+    const userId = res.locals.user.id;
+    const projectsPromise= Projects.findAll({where: userId});
     const projectPromise= Projects.findOne({
         where:{
-            id: req.params.id
+            id: req.params.id,
+            userId
         }
     });
     const [projects, project] = await Promise.all([projectsPromise, projectPromise]);

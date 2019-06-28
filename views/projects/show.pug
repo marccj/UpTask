@@ -25,6 +25,12 @@ block content
                             i.fas.fa-trash
               else
                 p No hay tareas en este proyecto
+        // Avance proyecto
+        .avance
+            h2 Avance del proyecto
+            #barra-avance.barra-avance
+                #porcentaje.porcentaje
+                
         // Acciones que se pueden realizar
         .contenedor-acciones
             a(href=`/proyecto/editar/${project.id}` class="boton") Editar Proyecto
