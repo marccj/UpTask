@@ -1,4 +1,5 @@
 const Users = require('../models/Users');
+const sendMail = require('../handler/mailer');
 
 exports.usersNewForm = (req, res) => {
     res.render('users/sign_up', {
@@ -16,7 +17,27 @@ exports.usersNewSubmit = async (req, res) => {
             email,
             password
         });
+
+        // crear una url de confirmacion
+        const confirmarUrl = `http://${req.headers.host}/confirmar/${email}`;
+
+        // crear el objeto de usuario
+        const user = {
+            email
+        }
+
+        // enviar email
+        await sendMail.send({
+            user,
+            subject: 'Confirmar cuenta en UpTask',
+            confirmarUrl,
+            archivo: 'account_confirm'
+        });
+
+        // redirigir al usuario
+        req.flash('correcto', 'Hemos enviado un correo a tu email para confirmar la cuenta');
         res.redirect('/iniciar-sesion');
+
     } catch (error) {
         req.flash('error', error.errors.map(error => error.message));
         res.render('users/sign_up', {
@@ -27,6 +48,27 @@ exports.usersNewSubmit = async (req, res) => {
         });
     }
     
+};
+
+// cambia el estado de una cuenta
+exports.accountConfirm = async (req, res) => {
+    const user = await Users.findOne({
+        where: {
+            email: req.params.email
+        }
+    });
+
+    //si no existe el usuario
+    if(!user){
+        req.flash('error', 'No valido'),
+        res.redirect('/crear-cuenta');
+    }
+
+    user.activo = 1;
+    await user.save();
+
+    req.flash('correcto', 'La cuenta ha sido confirmada correctamente');
+    res.redirect('/iniciar-sesion');
 };
 
 exports.usersSignIn = async (req, res) => {
@@ -42,3 +84,4 @@ exports.recoverPasswordForm = async (req, res) => {
         pageTitle: 'UpTask - Recuperar Contraseña'
     });
 };
+
